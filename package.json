@@ -1,0 +1,27 @@
+{
+  "name": "BIOSAssociationTable-App",
+  "version": "1.0.0",
+  "description": "Tabla de asociacion BIOS",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.16"
+  },
+  "scripts": {
+	"start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ARyan/BIOSAssociationTable.git"
+  },
+  "keywords": [
+    "Express",
+    "RestAPI",
+    "MongoDB",
+    "Mongoose"
+  ],
+  "author": "Agustin Ryan <GARyan@teco.com.ar>",
+  "license": "UNLICENSED"
+}
