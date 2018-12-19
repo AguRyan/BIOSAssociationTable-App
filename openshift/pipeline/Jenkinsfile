@@ -1,6 +1,6 @@
 node('nodejs') {
   stage 'build'
-  openshiftBuild(buildConfig: 'BIOSAssociationTable-App', showBuildLogs: 'true')
+  openshiftBuild(buildConfig: 'bios-association-table-app', showBuildLogs: 'true')
   stage 'deploy'
-  openshiftDeploy(deploymentConfig: 'BIOSAssociationTable-App')
+  openshiftDeploy(deploymentConfig: 'bios-association-table-app')
 }
