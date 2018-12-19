@@ -2,7 +2,7 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "BIOSAssociationTable-App",
+    "name": "bios-association-table-app",
     "annotations": {
       "openshift.io/display-name": "BIOSAssociationTable Node.js + MongoDB",
       "description": "An APP to consume the association table of BIOS",
@@ -439,7 +439,7 @@
       "displayName": "Name",
       "description": "The name assigned to all of the frontend objects defined in this template.",
       "required": true,
-      "value": "BIOSAssociationTable"
+      "value": "bios-association-table"
     },
     {
       "name": "NAMESPACE",

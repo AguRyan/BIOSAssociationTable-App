@@ -1,5 +1,5 @@
 {
-  "name": "BIOSAssociationTable-App",
+  "name": "bios-association-table-app",
   "version": "1.0.0",
   "description": "Tabla de asociacion BIOS",
   "main": "server.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/ARyan/BIOSAssociationTable.git"
+    "url": "http://github.com/AguRyan/BIOSAssociationTable-App.git"
   },
   "keywords": [
     "Express",
