@@ -2,10 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const basicAuth = require('express-basic-auth');
 
+const user=process.env.ASSOCIATION_USER;
+const pass=process.env.ASSOCIATION_PASSWORD;
 
 var staticUserAuth = basicAuth({
     users: {
-        process.env.ASSOCIATION_USER: process.env.ASSOCIATION_PASSWORD
+        user : pass
     },
     challenge: false,
 	unauthorizedResponse: getUnauthorizedResponse
