@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const basicAuth = require('express-basic-auth');
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
 // create express app

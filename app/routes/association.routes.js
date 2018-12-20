@@ -1,6 +1,6 @@
 module.exports = (app) => {
 	
-	
+	const basicAuth = require('express-basic-auth');
     const association = require('../controllers/association.controller.js');
 	const user=process.env.ASSOCIATION_USER;
 	const pass=process.env.ASSOCIATION_PASSWORD;
