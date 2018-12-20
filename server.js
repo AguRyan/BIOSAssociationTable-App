@@ -1,6 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const basicAuth = require('express-basic-auth');
 
+
+var staticUserAuth = basicAuth({
+    users: {
+        process.env.ASSOCIATION_USER: process.env.ASSOCIATION_PASSWORD
+    },
+    challenge: false,
+	unauthorizedResponse: getUnauthorizedResponse
+});
+
+
+var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
 // create express app
 const app = express();
 
@@ -17,8 +29,8 @@ app.get('/', (req, res) => {
 
 require('./app/routes/association.routes.js')(app);
 // listen for requests
-app.listen(3000, () => {
-    console.log("Server is listening on port 3000");
+app.listen(port, () => {
+    console.log("Server is listening on port:" + port);
 });
 
 // Configuring the database
@@ -36,3 +48,7 @@ mongoose.connect(dbConfig.url, {
     console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
 });
+
+function getUnauthorizedResponse(req) {
+return req.auth ? {"message":"Credentials with user" + req.auth.user + " rejected"} : {"message" : "No credentials provided"}
+}
