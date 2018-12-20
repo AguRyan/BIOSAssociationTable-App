@@ -29,7 +29,9 @@
       "stringData": {
         "database-user": "${DATABASE_USER}",
         "database-password": "${DATABASE_PASSWORD}",
-        "database-admin-password" : "${DATABASE_ADMIN_PASSWORD}"
+        "database-admin-password" : "${DATABASE_ADMIN_PASSWORD}",
+		"api-user": "${API_USER}",
+		"api-password":"${API_PASSWORD}"
       }
     },
     {
@@ -231,6 +233,24 @@
                       "secretKeyRef" : {
                         "name" : "${NAME}",
                         "key" : "database-admin-password"
+                      }
+                    }
+                  },
+				  {
+                    "name": "ASSOCIATION_USER",
+                    "valueFrom": {
+                      "secretKeyRef" : {
+                        "name" : "${NAME}",
+                        "key" : "api-user"
+                      }
+                    }
+                  },
+				  {
+                    "name": "ASSOCIATION_PASSWORD",
+                    "valueFrom": {
+                      "secretKeyRef" : {
+                        "name" : "${NAME}",
+                        "key" : "api-password"
                       }
                     }
                   }
@@ -558,6 +578,23 @@
       "displayName": "Custom NPM Mirror URL",
       "description": "The custom NPM mirror URL",
       "value": ""
+    },
+	{
+      "name": "API_USER",
+      "displayName": "API Username",
+      "description": "Username for app user that will be used to consume de API.",
+	  "required": true,
+      "generate": "expression",
+      "from": "user[A-Z0-9]{3}"
+    },
+	{
+      "name": "API_PASSWORD",
+      "displayName": "API Password",
+      "description": "Password for the API user.",
+	  "required": true,
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{16}"
     }
+	
   ]
 }
