@@ -2,18 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const basicAuth = require('express-basic-auth');
 
-const user=process.env.ASSOCIATION_USER;
-const pass=process.env.ASSOCIATION_PASSWORD;
-
-var staticUserAuth = basicAuth({
-    users: {
-        user : pass
-    },
-    challenge: false,
-	unauthorizedResponse: getUnauthorizedResponse
-});
-
-
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
 // create express app
 const app = express();
@@ -50,7 +38,3 @@ mongoose.connect(dbConfig.url, {
     console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
 });
-
-function getUnauthorizedResponse(req) {
-return req.auth ? {"message":"Credentials with user" + req.auth.user + " rejected"} : {"message" : "No credentials provided"}
-}
