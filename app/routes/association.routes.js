@@ -2,33 +2,33 @@ module.exports = (app) => {
 	
 	const basicAuth = require('express-basic-auth');
     const association = require('../controllers/association.controller.js');
-	const user=process.env.ASSOCIATION_USER;
-	const pass=process.env.ASSOCIATION_PASSWORD;
 	
-	var staticUserAuth = basicAuth({
-		users: {
-			user : pass
-		},
-		challenge: false,
-		unauthorizedResponse: getUnauthorizedResponse
-	});
+	var authorizerAuth = basicAuth({
+    authorizer: myAuthorizer,
+	challenge: false,
+	unauthorizedResponse: getUnauthorizedResponse
+	})
 
     // Create a new Association
-    app.post('/association',staticUserAuth, association.create);
+    app.post('/association',authorizerAuth, association.create);
 
     // Retrieve all Associations
-    app.get('/association',staticUserAuth, association.findAll);
+    app.get('/association',authorizerAuth, association.findAll);
 
     // Retrieve a single Association with noteId
-    app.get('/association/:id_consumer',staticUserAuth, association.findOne);
+    app.get('/association/:id_consumer',authorizerAuth, association.findOne);
 
     // Update a Association with noteId
-    app.put('/association/:id_consumer',staticUserAuth, association.update);
+    app.put('/association/:id_consumer',authorizerAuth, association.update);
 
     // Delete a Association with noteId
-    app.delete('/association/:id_consumer',staticUserAuth, association.delete);
+    app.delete('/association/:id_consumer',authorizerAuth, association.delete);
 	
+	function myAuthorizer(username, password) {
+		return username == process.env.ASSOCIATION_USER && password == process.env.ASSOCIATION_PASSWORD
+	}
+
 	function getUnauthorizedResponse(req) {
-		return req.auth ? {"message":"Credentials with user" + req.auth.user + " rejected"} : {"message" : "No credentials provided"}
-}
+		return req.auth ? {"message":"Credentials with user " + req.auth.user + " rejected"} : {"message" : "No credentials provided"}
+	}
 }
