@@ -13,15 +13,15 @@ module.exports = (app) => {
     app.post('/association',authorizerAuth, association.create);
 
     // Retrieve all Associations
-    app.get('/association',authorizerAuth, association.findAll);
+    app.get('/association/all',authorizerAuth, association.findAll);
 
-    // Retrieve a single Association with noteId
-    app.get('/association/:id_consumer',authorizerAuth, association.findOne);
+    // Retrieve a single Association with id_consumer or id_provider
+    app.get('/association',authorizerAuth, association.findOne);
 
-    // Update a Association with noteId
+    // Update a Association with id_consumer
     app.put('/association/:id_consumer',authorizerAuth, association.update);
 
-    // Delete a Association with noteId
+    // Delete a Association with id_consumer
     app.delete('/association/:id_consumer',authorizerAuth, association.delete);
 	
 	function myAuthorizer(username, password) {

@@ -52,26 +52,61 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single association with a id_consumer
+// Find a single association with a id_consumer or id_provider
 exports.findOne = (req, res) => {
-    Association.findOne({ id_consumer: req.params.id_consumer })
-    .then(association => {
-        if(!association) {
-            return res.status(404).send({
-                message: "Association not found with id " + req.params.id_consumer
-            });            
-        }
-        res.send(association);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Association not found with id " + req.params.id_consumer
-            });                
-        }
-        return res.status(500).send({
-            message: "Error retrieving association with id " + req.params.id_consumer
-        });
-    });
+ 
+	
+	if(req.query.id_consumer)
+	{
+		 Association.findOne({ id_consumer: req.query.id_consumer })
+		.then(association => {
+			if(!association) {
+				return res.status(404).send({
+					message: "Association not found with id_consumer " + req.query.id_consumer
+				});            
+			}
+			res.send(association);
+		}).catch(err => {
+			if(err.kind === 'ObjectId') {
+				return res.status(404).send({
+					message: "Association not found with id_consumer " + req.query.id_consumer
+				});                
+			}
+			return res.status(500).send({
+				message: "Error retrieving association with id_consumer " + req.query.id_consumer
+			});
+		});
+	}
+	else if (req.query.id_provider)
+	{
+		 Association.findOne({ id_provider: req.query.id_provider })
+		.then(association => {
+			if(!association) {
+				return res.status(404).send({
+					message: "Association not found with id_provider " + req.query.id_provider
+				});            
+			}
+			res.send(association);
+		}).catch(err => {
+			if(err.kind === 'ObjectId') {
+				return res.status(404).send({
+					message: "Association not found with id_provider " + req.query.id_provider
+				});                
+			}
+			return res.status(500).send({
+				message: "Error retrieving association with id_provider " + req.query.id_provider
+			});
+		});
+	}
+	else
+	{
+		return res.status(400).send({
+                message: "Bad query parameters"
+            });
+	}
+		
+	
+ 
 };
 
 // Update a association identified by the id_consumer in the request
