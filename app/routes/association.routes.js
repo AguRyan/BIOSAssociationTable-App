@@ -19,10 +19,10 @@ module.exports = (app) => {
     app.get('/association',authorizerAuth, association.findOne);
 
     // Update a Association with id_consumer
-    app.put('/association/:id_consumer',authorizerAuth, association.update);
+    app.put('/association/:idConsumer',authorizerAuth, association.update);
 
     // Delete a Association with id_consumer
-    app.delete('/association/:id_consumer',authorizerAuth, association.delete);
+    app.delete('/association/:idConsumer',authorizerAuth, association.delete);
 	
 	function myAuthorizer(username, password) {
 		return username == process.env.ASSOCIATION_USER && password == process.env.ASSOCIATION_PASSWORD
