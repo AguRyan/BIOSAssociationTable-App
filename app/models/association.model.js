@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const AssociationSchema = mongoose.Schema({
-    consumer: String,
-    id_consumer: String,
-	id_provider: String,
+	_id: String,
+	consumer: String,
+	idProvider: String,
 	operation: String,
-	internal_use: String,
+	internalUse: String,
 }, {
-    timestamps: true
+    timestamps: true,
+	versionKey: false
 });
 
 module.exports = mongoose.model('Association', AssociationSchema);

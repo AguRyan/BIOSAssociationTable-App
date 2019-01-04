@@ -8,9 +8,9 @@ exports.create = (req, res) => {
         });
     }
 	
-	if(!req.body.id_consumer) {
+	if(!req.body.idConsumer) {
         return res.status(400).send({
-            message: "Association id_consumer can not be empty"
+            message: "Association idConsumer can not be empty"
         });
     }
 	
@@ -22,17 +22,17 @@ exports.create = (req, res) => {
 
     // Create a association
     const association = new Association({
-        consumer: req.body.consumer || "", 
-        id_consumer: req.body.id_consumer || "",
-        id_provider: req.body.id_provider || "",
+        _id: req.body.idConsumer,
+		consumer: req.body.consumer || "", 
+        idProvider: req.body.idProvider || "",
         operation: req.body.operation || "",
-        internal_use: req.body.internal_use || ""
+        internalUse: req.body.internalUse || ""
     });
 
     // Save Association in the database
     association.save()
     .then(data => {
-        res.send(data);
+        res.send(JSON.parse(JSON.stringify(data).split('"_id":').join('"idConsumer":')));
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Association."
@@ -44,7 +44,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     Association.find()
     .then(associations => {
-        res.send(associations);
+        res.send(JSON.parse(JSON.stringify(associations).split('"_id":').join('"idConsumer":')));
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving associations."
@@ -52,49 +52,52 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single association with a id_consumer or id_provider
+// Find a single association with a idConsumer or with idProvider
 exports.findOne = (req, res) => {
- 
+
 	
-	if(req.query.id_consumer)
+	if(req.query.idConsumer)
 	{
-		 Association.findOne({ id_consumer: req.query.id_consumer })
+		 Association.findById(req.query.idConsumer)
 		.then(association => {
 			if(!association) {
 				return res.status(404).send({
-					message: "Association not found with id_consumer " + req.query.id_consumer
+					message: "Association not found with idConsumer " + req.query.idConsumer
 				});            
 			}
-			res.send(association);
+						
+			
+			res.send(JSON.parse(JSON.stringify(association).split('"_id":').join('"idConsumer":')));
 		}).catch(err => {
 			if(err.kind === 'ObjectId') {
 				return res.status(404).send({
-					message: "Association not found with id_consumer " + req.query.id_consumer
+					message: "Association not found with idConsumer " + req.query.idConsumer
 				});                
 			}
 			return res.status(500).send({
-				message: "Error retrieving association with id_consumer " + req.query.id_consumer
+				message: "Error retrieving association with idConsumer " + req.query.idConsumer
 			});
 		});
 	}
-	else if (req.query.id_provider)
+	else if (req.query.idProvider)
 	{
-		 Association.findOne({ id_provider: req.query.id_provider })
+		 Association.findOne({ idProvider: req.query.idProvider })
 		.then(association => {
 			if(!association) {
 				return res.status(404).send({
-					message: "Association not found with id_provider " + req.query.id_provider
+					message: "Association not found with idProvider " + req.query.idProvider
 				});            
 			}
-			res.send(association);
+			association.idConsumer = association._id;
+			res.send(JSON.parse(JSON.stringify(association).split('"_id":').join('"idConsumer":')));
 		}).catch(err => {
 			if(err.kind === 'ObjectId') {
 				return res.status(404).send({
-					message: "Association not found with id_provider " + req.query.id_provider
+					message: "Association not found with idProvider " + req.query.idProvider
 				});                
 			}
 			return res.status(500).send({
-				message: "Error retrieving association with id_provider " + req.query.id_provider
+				message: "Error retrieving association with idProvider " + req.query.idProvider
 			});
 		});
 	}
@@ -109,13 +112,13 @@ exports.findOne = (req, res) => {
  
 };
 
-// Update a association identified by the id_consumer in the request
+// Update a association identified by the idConsumer in the request
 exports.update = (req, res) => {
     // Validate Request
 	
-	if(!req.body.id_provider) {
+	if(!req.body.idProvider) {
         return res.status(400).send({
-            message: "Association id_provider can not be empty"
+            message: "Association idProvider can not be empty"
         });
     }	
 	
@@ -126,47 +129,47 @@ exports.update = (req, res) => {
     }
 
     // Find association and update it with the request body
-    Association.findOneAndUpdate({ id_consumer: req.params.id_consumer }, {
-        id_provider: req.body.id_provider || "",
+    Association.findByIdAndUpdate(req.params.idConsumer, {
+        idProvider: req.body.idProvider || "",
         operation: req.body.operation || ""
     }, {new: true})
     .then(association => {
         if(!association) {
             return res.status(404).send({
-                message: "Association not found with id " + req.params.id_consumer
+                message: "Association not found with id " + req.params.idConsumer
             });
         }
-        res.send(association);
+        res.send(JSON.parse(JSON.stringify(association).split('"_id":').join('"idConsumer":')));
     }).catch(err => {
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
-                message: "Association not found with id " + req.params.id_consumer
+                message: "Association not found with id " + req.params.idConsumer
             });                
         }
         return res.status(500).send({
-            message: "Error updating association with id " + req.params.id_consumer
+            message: "Error updating association with id " + req.params.idConsumer
         });
     });
 };
 
 // Delete a association with the specified associationId in the request
 exports.delete = (req, res) => {
-    Association.findByIdAndRemove(req.params.associationId)
+    Association.findByIdAndRemove(req.params.idConsumer)
     .then(association => {
         if(!association) {
             return res.status(404).send({
-                message: "Association not found with id " + req.params.associationId
+                message: "Association not found with id " + req.params.idConsumer
             });
         }
         res.send({message: "Association deleted successfully!"});
     }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
-                message: "Association not found with id " + req.params.associationId
+                message: "Association not found with id " + req.params.idConsumer
             });                
         }
         return res.status(500).send({
-            message: "Could not delete association with id " + req.params.associationId
+            message: "Could not delete association with id " + req.params.idConsumer
         });
     });
 };
