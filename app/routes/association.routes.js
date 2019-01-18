@@ -22,7 +22,7 @@ module.exports = (app) => {
     app.put('/association/:idConsumer',authorizerAuth, association.update);
 
     // Delete a Association with id_consumer
-    app.delete('/association/:idConsumer',authorizerAuth, association.delete);
+    app.delete('/association',authorizerAuth, association.deleteByOperation);
 	
 	function myAuthorizer(username, password) {
 		return username == process.env.ASSOCIATION_USER && password == process.env.ASSOCIATION_PASSWORD
