@@ -153,15 +153,15 @@ exports.update = (req, res) => {
 };
 
 // Delete a association with the specified associationId in the request
-exports.delete = (req, res) => {
-    Association.findByIdAndRemove(req.params.idConsumer)
+exports.deleteByOperation = (req, res) => {
+    Association.deleteMany({ operation: "ELI" })
     .then(association => {
         if(!association) {
-            return res.status(404).send({
-                message: "Association not found with id " + req.params.idConsumer
+            return res.send({
+                message: "No association to delete with operation: ELI"
             });
         }
-        res.send({message: "Association deleted successfully!"});
+        res.send({message: "Associations with operation: ELI deleted successfully!"});
     }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {
             return res.status(404).send({
