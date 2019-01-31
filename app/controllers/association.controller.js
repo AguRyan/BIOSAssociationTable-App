@@ -1,20 +1,25 @@
 const Association = require('../models/association.model.js');
+const glogger = require('../../config/graylog.config.js');
 
 exports.create = (req, res) => {
     // Validate request
+	glogger(6,"POST Request: "+ JSON.stringify(req.body),req.headers.messageid);
     if(!req.body.consumer) {
+		glogger(3,"Association consumer can not be empty",req.headers.messageid);
         return res.status(400).send({
             message: "Association consumer can not be empty"
         });
     }
 	
 	if(!req.body.idConsumer) {
+		glogger(3,"Association idConsumer can not be empty",req.headers.messageid);
         return res.status(400).send({
             message: "Association idConsumer can not be empty"
         });
     }
 	
 	if(!req.body.operation) {
+		glogger(3,"Association opeartion can not be empty",req.headers.messageid);
         return res.status(400).send({
             message: "Association operation can not be empty"
         });
@@ -32,8 +37,10 @@ exports.create = (req, res) => {
     // Save Association in the database
     association.save()
     .then(data => {
+		glogger(6,"POST OK",req.headers.messageid);
         res.send(JSON.parse(JSON.stringify(data).split('"_id":').join('"idConsumer":')));
     }).catch(err => {
+		glogger(3,err.message || "Some error occurred while creating the Association.",req.headers.messageid);
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Association."
         });
@@ -46,6 +53,7 @@ exports.findAll = (req, res) => {
     .then(associations => {
         res.send(JSON.parse(JSON.stringify(associations).split('"_id":').join('"idConsumer":')));
     }).catch(err => {
+		glogger(3,err.message || "Some error occurred while creating the Association.",req.headers.messageid);
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving associations."
         });
@@ -58,22 +66,26 @@ exports.findOne = (req, res) => {
 	
 	if(req.query.idConsumer)
 	{
+		glogger(6,"GET Request: ?idConsumer="+ req.query.idConsumer,req.headers.messageid);
 		 Association.findById(req.query.idConsumer)
 		.then(association => {
 			if(!association) {
+				glogger(3,"Association not found with idConsumer " + req.query.idConsumer,req.headers.messageid);
 				return res.status(404).send({
 					message: "Association not found with idConsumer " + req.query.idConsumer
 				});            
 			}
 						
-			
+			glogger(6,"GET OK",req.headers.messageid);
 			res.send(JSON.parse(JSON.stringify(association).split('"_id":').join('"idConsumer":')));
 		}).catch(err => {
 			if(err.kind === 'ObjectId') {
+				glogger(3,"Association not found with idConsumer " + req.query.idConsumer,req.headers.messageid);
 				return res.status(404).send({
 					message: "Association not found with idConsumer " + req.query.idConsumer
 				});                
 			}
+			glogger(3,"Error retrieving association with idConsumer " + req.query.idConsumer,req.headers.messageid);
 			return res.status(500).send({
 				message: "Error retrieving association with idConsumer " + req.query.idConsumer
 			});
@@ -81,21 +93,26 @@ exports.findOne = (req, res) => {
 	}
 	else if (req.query.idProvider)
 	{
+		glogger(6,"GET Request: ?idProvider="+ req.query.idProvider,req.headers.messageid);
 		 Association.findOne({ idProvider: req.query.idProvider })
 		.then(association => {
 			if(!association) {
+				glogger(3,"Association not found with idProvider " + req.query.idProvider,req.headers.messageid);
 				return res.status(404).send({
 					message: "Association not found with idProvider " + req.query.idProvider
 				});            
 			}
+			glogger(6,"GET OK",req.headers.messageid);
 			association.idConsumer = association._id;
 			res.send(JSON.parse(JSON.stringify(association).split('"_id":').join('"idConsumer":')));
 		}).catch(err => {
 			if(err.kind === 'ObjectId') {
+				glogger(3,"Association not found with idProvider " + req.query.idProvider,req.headers.messageid);
 				return res.status(404).send({
 					message: "Association not found with idProvider " + req.query.idProvider
 				});                
 			}
+			glogger(3,"Error retrieving association with idProvider " + req.query.idProvider,req.headers.messageid);
 			return res.status(500).send({
 				message: "Error retrieving association with idProvider " + req.query.idProvider
 			});
@@ -103,6 +120,8 @@ exports.findOne = (req, res) => {
 	}
 	else
 	{
+		glogger(6,"GET Request: "+ JSON.stringify(req.query),req.headers.messageid);
+		glogger(3,"Bad query parameters",req.headers.messageid);
 		return res.status(400).send({
                 message: "Bad query parameters"
             });
@@ -115,14 +134,17 @@ exports.findOne = (req, res) => {
 // Update a association identified by the idConsumer in the request
 exports.update = (req, res) => {
     // Validate Request
+	glogger(6,"PUT Request: "+req.params.idConsumer +" " + JSON.stringify(req.body),req.headers.messageid);
 	
 	if(!req.body.idProvider) {
+		glogger(3,"Association idProvider can not be empty",req.headers.messageid);
         return res.status(400).send({
             message: "Association idProvider can not be empty"
         });
     }	
 	
 	if(!req.body.operation) {
+		glogger(3,"Association operation can not be empty",req.headers.messageid);
         return res.status(400).send({
             message: "Association operation can not be empty"
         });
@@ -135,17 +157,21 @@ exports.update = (req, res) => {
     }, {new: true})
     .then(association => {
         if(!association) {
+			glogger(3,"Association not found with id " + req.params.idConsumer,req.headers.messageid);
             return res.status(404).send({
                 message: "Association not found with id " + req.params.idConsumer
             });
         }
+		glogger(6,"PUT OK",req.headers.messageid);
         res.send(JSON.parse(JSON.stringify(association).split('"_id":').join('"idConsumer":')));
     }).catch(err => {
+		glogger(3,"Association not found with id " + req.params.idConsumer,req.headers.messageid);
         if(err.kind === 'ObjectId') {
             return res.status(404).send({
                 message: "Association not found with id " + req.params.idConsumer
             });                
         }
+		glogger(3,"Error updating association with id " + req.params.idConsumer,req.headers.messageid);
         return res.status(500).send({
             message: "Error updating association with id " + req.params.idConsumer
         });
@@ -157,10 +183,12 @@ exports.deleteByOperation = (req, res) => {
     Association.deleteMany({ operation: "ELI" })
     .then(association => {
         if(!association) {
+			glogger(3,"No association to delete with operation: ELI",req.headers.messageid);
             return res.send({
                 message: "No association to delete with operation: ELI"
             });
         }
+		glogger(6,"Associations with operation: ELI deleted successfully!",req.headers.messageid);
         res.send({message: "Associations with operation: ELI deleted successfully!"});
     }).catch(err => {
         if(err.kind === 'ObjectId' || err.name === 'NotFound') {

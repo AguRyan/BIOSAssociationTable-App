@@ -202,6 +202,18 @@
                 ],
                 "env": [
                   {
+                    "name": "GRAYLOG_PROTOCOL",
+                    "value": "${GRAYLOG_PROTOCOL}"
+                  },
+				  {
+                    "name": "GRAYLOG_HOST",
+                    "value": "${GRAYLOG_HOST}"
+                  },
+				  {
+                    "name": "GRAYLOG_PORT",
+                    "value": "${GRAYLOG_PORT}"
+                  },
+				  {
                     "name": "DATABASE_SERVICE_NAME",
                     "value": "${DATABASE_SERVICE_NAME}"
                   },
@@ -594,6 +606,27 @@
 	  "required": true,
       "generate": "expression",
       "from": "[a-zA-Z0-9]{16}"
+    },
+	{
+      "name": "GRAYLOG_HOST",
+      "displayName": "Host Graylog",
+      "description": "Host Graylog",
+	  "required": true,
+      "value": "logprep.telecom.com.ar"
+    },
+	{
+      "name": "GRAYLOG_PORT",
+      "displayName": "Port Graylog",
+      "description": "Port Graylog",
+	  "required": true,
+      "value": "5503"
+    },
+	{
+      "name": "GRAYLOG_PROTOCOL",
+      "displayName": "Protocol Graylog",
+      "description": "Protocol Graylog",
+	  "required": true,
+      "value": "UDP"
     }
 	
   ]
