@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const glogger = require('./config/graylog.config.js');
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
 // create express app
@@ -20,6 +21,7 @@ require('./app/routes/association.routes.js')(app);
 // listen for requests
 app.listen(port, () => {
     console.log("Server is listening on port:" + port);
+	glogger(6,"Server is listening on port:" + port,0);
 });
 
 // Configuring the database
@@ -33,7 +35,9 @@ mongoose.connect(dbConfig.url, {
     useNewUrlParser: true
 }).then(() => {
     console.log("Successfully connected to the database: " + dbConfig.url);    
+	glogger(6,"Successfully connected to the database",0);
 }).catch(err => {
     console.log('Could not connect to the database. Exiting now...', err);
+	glogger(3,'Could not connect to the database. Exiting now...',0);
     process.exit();
 });

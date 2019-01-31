@@ -2,6 +2,7 @@ module.exports = (app) => {
 	
 	const basicAuth = require('express-basic-auth');
     const association = require('../controllers/association.controller.js');
+	const glogger = require('../../config/graylog.config.js');
 	
 	var authorizerAuth = basicAuth({
     authorizer: myAuthorizer,
@@ -29,6 +30,7 @@ module.exports = (app) => {
 	}
 
 	function getUnauthorizedResponse(req) {
+		glogger(6,"Credentials with user " + req.auth.user + " rejected");
 		return req.auth ? {"message":"Credentials with user " + req.auth.user + " rejected"} : {"message" : "No credentials provided"}
 	}
 }
